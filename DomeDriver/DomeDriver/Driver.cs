@@ -1,23 +1,20 @@
 //tabs=4
 // --------------------------------------------------------------------------------
-// TODO fill in this information for your driver, then remove this line!
 //
 // ASCOM Dome driver for FancyDome
 //
-// Description:	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam 
-//				nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam 
-//				erat, sed diam voluptua. At vero eos et accusam et justo duo 
-//				dolores et ea rebum. Stet clita kasd gubergren, no sea takimata 
-//				sanctus est Lorem ipsum dolor sit amet.
+// Description:	Standard driver to control the Dome from an astronomic
+//              observatory. Based on the develop of Antonio Perez. This is part
+//              of the final degree project.
 //
 // Implements:	ASCOM Dome interface version: <To be completed by driver developer>
-// Author:		(XXX) Your N. Here <your@email.here>
+// Author:		(JGC) Javier Gallego Carracedo <javier.gallegoc@alumnos.upm.es>
 //
 // Edit Log:
 //
 // Date			Who	Vers	Description
 // -----------	---	-----	-------------------------------------------------------
-// dd-mmm-yyyy	XXX	6.0.0	Initial edit, created from ASCOM driver template
+// 01-03-2019	JGC	6.0.0	Initial edit, created from ASCOM driver template
 // --------------------------------------------------------------------------------
 //
 
@@ -70,6 +67,7 @@ namespace ASCOM.FancyDome
         /// Driver description that displays in the ASCOM Chooser.
         /// </summary>
         private static string driverDescription = "ASCOM Dome Driver for FancyDome.";
+        private static ASCOM.Utilities.Serial objSerial;
 
         internal static string comPortProfileName = "COM Port"; // Constants used for Profile persistence
         internal static string comPortDefault = "COM1";
@@ -188,7 +186,10 @@ namespace ASCOM.FancyDome
             // it's a good idea to put all the low level communication with the device here,
             // then all communication calls this function
             // you need something to ensure that only one command is in progress at a time
-
+            objSerial.Transmit(command);
+            String s;
+            s = objSerial.Receive();
+            LogMessage("Result: ",s);
             throw new ASCOM.MethodNotImplementedException("CommandString");
         }
 
@@ -221,13 +222,16 @@ namespace ASCOM.FancyDome
                 {
                     connectedState = true;
                     LogMessage("Connected Set", "Connecting to port {0}", comPort);
-                    // TODO connect to the device
+                    objSerial = new ASCOM.Utilities.Serial();
+                    objSerial.Port = 10;
+                    objSerial.Speed = SerialSpeed.ps9600;
+                    objSerial.Connected = true;
                 }
                 else
                 {
                     connectedState = false;
                     LogMessage("Connected Set", "Disconnecting from port {0}", comPort);
-                    // TODO disconnect from the device
+                    objSerial.Connected = false;
                 }
             }
         }
@@ -279,7 +283,7 @@ namespace ASCOM.FancyDome
         {
             get
             {
-                string name = "Short driver name - please customise";
+                string name = "FancyDome";
                 tl.LogMessage("Name Get", name);
                 return name;
             }
@@ -407,6 +411,7 @@ namespace ASCOM.FancyDome
 
         public void CloseShutter()
         {
+            CommandString("&P#", true);
             tl.LogMessage("CloseShutter", "Shutter has been closed");
             domeShutterState = false;
         }
@@ -419,6 +424,7 @@ namespace ASCOM.FancyDome
 
         public void OpenShutter()
         {
+            CommandString("&O#", true);
             tl.LogMessage("OpenShutter", "Shutter has been opened");
             domeShutterState = true;
         }
@@ -451,6 +457,11 @@ namespace ASCOM.FancyDome
                     return ShutterState.shutterClosed;
                 }
             }
+        }
+
+        public string GetStatus()
+        {
+            return CommandString("&G#", true);
         }
 
         public bool Slaved
@@ -581,8 +592,8 @@ namespace ASCOM.FancyDome
         {
             get
             {
-                // TODO check that the driver hardware connection exists and is connected to the hardware
-                return connectedState;
+                if (objSerial != null && objSerial.Connected) return true;
+                return false;
             }
         }
 
