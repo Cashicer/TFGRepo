@@ -190,7 +190,7 @@ namespace ASCOM.FancyDome
             String s;
             s = objSerial.Receive();
             LogMessage("Result: ",s);
-            throw new ASCOM.MethodNotImplementedException("CommandString");
+            return s;
         }
 
         public void Dispose()
@@ -424,7 +424,7 @@ namespace ASCOM.FancyDome
 
         public void OpenShutter()
         {
-            CommandString("&O#", true);
+            String ret = CommandString("&O#", true);
             tl.LogMessage("OpenShutter", "Shutter has been opened");
             domeShutterState = true;
         }
