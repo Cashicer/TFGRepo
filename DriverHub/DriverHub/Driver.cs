@@ -1,20 +1,23 @@
 //tabs=4
 // --------------------------------------------------------------------------------
+// TODO fill in this information for your driver, then remove this line!
 //
-// ASCOM Dome driver for FancyDome
+// ASCOM Dome driver for TalonSuccessor
 //
-// Description:	Standard driver to control the Dome from an astronomic
-//              observatory. Based on the develop of Antonio Perez. This is part
-//              of the final degree project.
+// Description:	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam 
+//				nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam 
+//				erat, sed diam voluptua. At vero eos et accusam et justo duo 
+//				dolores et ea rebum. Stet clita kasd gubergren, no sea takimata 
+//				sanctus est Lorem ipsum dolor sit amet.
 //
 // Implements:	ASCOM Dome interface version: <To be completed by driver developer>
-// Author:		(JGC) Javier Gallego Carracedo <javier.gallegoc@alumnos.upm.es>
+// Author:		(XXX) Your N. Here <your@email.here>
 //
 // Edit Log:
 //
 // Date			Who	Vers	Description
 // -----------	---	-----	-------------------------------------------------------
-// 01-03-2019	JGC	6.0.0	Initial edit, created from ASCOM driver template
+// dd-mmm-yyyy	XXX	6.0.0	Initial edit, created from ASCOM driver template
 // --------------------------------------------------------------------------------
 //
 
@@ -36,38 +39,37 @@ using ASCOM.Utilities;
 using ASCOM.DeviceInterface;
 using System.Globalization;
 using System.Collections;
-using ASCOM.FancyDome;
 
-namespace ASCOM.DomeDriverServer
+namespace ASCOM.TalonSuccessor
 {
     //
-    // Your driver's DeviceID is ASCOM.FancyDome.Dome
+    // Your driver's DeviceID is ASCOM.TalonSuccessor.Dome
     //
-    // The Guid attribute sets the CLSID for ASCOM.FancyDome.Dome
+    // The Guid attribute sets the CLSID for ASCOM.TalonSuccessor.Dome
     // The ClassInterface/None addribute prevents an empty interface called
-    // _FancyDome from being created and used as the [default] interface
+    // _TalonSuccessor from being created and used as the [default] interface
     //
     // TODO Replace the not implemented exceptions with code to implement the function or
     // throw the appropriate ASCOM exception.
     //
 
     /// <summary>
-    /// ASCOM Dome Driver for FancyDome.
+    /// ASCOM Dome Driver for TalonSuccessor.
     /// </summary>
-    [Guid("49b484a6-cb9d-4116-b876-50404e7c37d7")]
-    [ProgId("ASCOM.DomeDriverServer.Dome")]
-    [ServedClassName("Fancy Dome")]
+    [Guid("2a43e7a0-8067-4c25-bade-d6429ddcb3e0")]
     [ClassInterface(ClassInterfaceType.None)]
-    public class Dome : ReferenceCountedObjectBase, IDomeV2
+    public class Dome : IDomeV2
     {
         /// <summary>
         /// ASCOM DeviceID (COM ProgID) for this driver.
         /// The DeviceID is used by ASCOM applications to load the driver at runtime.
         /// </summary>
-        /// 
-
-        s_csDriverID = Marshal.GenerateProgIdForType(this.GetType());
-
+        internal static string driverID = "ASCOM.TalonSuccessor.Dome";
+        // TODO Change the descriptive string for your driver then remove this line
+        /// <summary>
+        /// Driver description that displays in the ASCOM Chooser.
+        /// </summary>
+        private static string driverDescription = "ASCOM Dome Driver for TalonSuccessor.";
 
         private static ASCOM.Utilities.Serial objSerial;
 
@@ -99,12 +101,12 @@ namespace ASCOM.DomeDriverServer
         internal static TraceLogger tl;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FancyDome"/> class.
+        /// Initializes a new instance of the <see cref="TalonSuccessor"/> class.
         /// Must be public for COM registration.
         /// </summary>
         public Dome()
         {
-            tl = new TraceLogger("", "FancyDome");
+            tl = new TraceLogger("", "TalonSuccessor");
             ReadProfile(); // Read device configuration from the ASCOM Profile store
 
             tl.LogMessage("Dome", "Starting initialisation");
@@ -191,7 +193,7 @@ namespace ASCOM.DomeDriverServer
             objSerial.Transmit(command);
             String s;
             s = objSerial.Receive();
-            LogMessage("Result: ",s);
+            LogMessage("Result: ", s);
             return s;
         }
 
@@ -285,7 +287,7 @@ namespace ASCOM.DomeDriverServer
         {
             get
             {
-                string name = "FancyDome";
+                string name = "TalonSuccessor";
                 tl.LogMessage("Name Get", name);
                 return name;
             }
@@ -513,7 +515,79 @@ namespace ASCOM.DomeDriverServer
         // here are some useful properties and methods that can be used as required
         // to help with driver development
 
- 
+        #region ASCOM Registration
+
+        // Register or unregister driver for ASCOM. This is harmless if already
+        // registered or unregistered. 
+        //
+        /// <summary>
+        /// Register or unregister the driver with the ASCOM Platform.
+        /// This is harmless if the driver is already registered/unregistered.
+        /// </summary>
+        /// <param name="bRegister">If <c>true</c>, registers the driver, otherwise unregisters it.</param>
+        private static void RegUnregASCOM(bool bRegister)
+        {
+            using (var P = new ASCOM.Utilities.Profile())
+            {
+                P.DeviceType = "Dome";
+                if (bRegister)
+                {
+                    P.Register(driverID, driverDescription);
+                }
+                else
+                {
+                    P.Unregister(driverID);
+                }
+            }
+        }
+
+        /// <summary>
+        /// This function registers the driver with the ASCOM Chooser and
+        /// is called automatically whenever this class is registered for COM Interop.
+        /// </summary>
+        /// <param name="t">Type of the class being registered, not used.</param>
+        /// <remarks>
+        /// This method typically runs in two distinct situations:
+        /// <list type="numbered">
+        /// <item>
+        /// In Visual Studio, when the project is successfully built.
+        /// For this to work correctly, the option <c>Register for COM Interop</c>
+        /// must be enabled in the project settings.
+        /// </item>
+        /// <item>During setup, when the installer registers the assembly for COM Interop.</item>
+        /// </list>
+        /// This technique should mean that it is never necessary to manually register a driver with ASCOM.
+        /// </remarks>
+        [ComRegisterFunction]
+        public static void RegisterASCOM(Type t)
+        {
+            RegUnregASCOM(true);
+        }
+
+        /// <summary>
+        /// This function unregisters the driver from the ASCOM Chooser and
+        /// is called automatically whenever this class is unregistered from COM Interop.
+        /// </summary>
+        /// <param name="t">Type of the class being registered, not used.</param>
+        /// <remarks>
+        /// This method typically runs in two distinct situations:
+        /// <list type="numbered">
+        /// <item>
+        /// In Visual Studio, when the project is cleaned or prior to rebuilding.
+        /// For this to work correctly, the option <c>Register for COM Interop</c>
+        /// must be enabled in the project settings.
+        /// </item>
+        /// <item>During uninstall, when the installer unregisters the assembly from COM Interop.</item>
+        /// </list>
+        /// This technique should mean that it is never necessary to manually unregister a driver from ASCOM.
+        /// </remarks>
+        [ComUnregisterFunction]
+        public static void UnregisterASCOM(Type t)
+        {
+            RegUnregASCOM(false);
+        }
+
+        #endregion
 
         /// <summary>
         /// Returns true if there is a valid connection to the driver hardware
@@ -523,7 +597,7 @@ namespace ASCOM.DomeDriverServer
             get
             {
                 if (objSerial != null && objSerial.Connected) return true;
-                return false;
+                return connectedState;
             }
         }
 

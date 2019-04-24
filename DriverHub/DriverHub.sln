@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomeDriver", "DomeDriver\DomeDriver.csproj", "{64308775-BD4A-469C-BCAB-3ED830B811AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverHub", "DriverHub\DriverHub.csproj", "{64308775-BD4A-469C-BCAB-3ED830B811AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomeDriverServer", "DomeDriverServer\DomeDriverServer.csproj", "{3689A2CB-94C5-4012-A5CF-7E7D1DD27143}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TalonSuccessor", "TalonSuccessor\TalonSuccessor.csproj", "{3689A2CB-94C5-4012-A5CF-7E7D1DD27143}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {C88BC28B-2F8F-425D-AC47-3882334CC507}
+		SolutionGuid = {EEADA569-9B39-41C6-ABE8-EA04A92852BD}
 	EndGlobalSection
 EndGlobal
