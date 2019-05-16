@@ -60,7 +60,7 @@ namespace ASCOM.TalonSuccessor
     public class Dome : ReferenceCountedObjectBase, IDomeV2
     {
 
-        private static ASCOM.Utilities.Serial objSerial;
+        internal static ASCOM.Utilities.Serial objSerial;
 
         internal static string comPortProfileName = "COM Port"; // Constants used for Profile persistence
         internal static string comPortDefault = "COM1";

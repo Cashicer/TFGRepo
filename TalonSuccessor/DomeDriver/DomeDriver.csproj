@@ -44,7 +44,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <RegisterForComInterop>false</RegisterForComInterop>
+    <RegisterForComInterop>true</RegisterForComInterop>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -93,7 +93,7 @@
     <Compile Include="SetupDialogForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SetupDialogForm.designer.cs">
+    <Compile Include="SetupDialogForm.Designer.cs">
       <DependentUpon>SetupDialogForm.cs</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -105,7 +105,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SetupDialogForm.resx">
       <DependentUpon>SetupDialogForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +146,9 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)\TalonSuccessor\$(OutDir)\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
