@@ -147,15 +147,25 @@ namespace ASCOM.TalonSuccessor
         {
             get
             {
-                tl.LogMessage("SupportedActions Get", "Returning empty arraylist");
-                return new ArrayList();
+                ArrayList ret = new ArrayList();
+                ret.Add("GetStatus");
+                tl.LogMessage("SupportedActions Get", "Returning arraylist");
+                return ret;
             }
         }
 
         public string Action(string actionName, string actionParameters)
         {
-            LogMessage("", "Action {0}, parameters {1} not implemented", actionName, actionParameters);
-            throw new ASCOM.ActionNotImplementedException("Action " + actionName + " is not implemented by this driver");
+            String act = actionName.ToLower();
+            if(act.Equals("getstatus"))
+            {
+                return CommandString("&G#", true);
+            }
+            else
+            {
+                LogMessage("", "Action {0}, parameters {1} not implemented", actionName, actionParameters);
+                throw new ASCOM.ActionNotImplementedException("Action " + actionName + " is not implemented by this driver");
+            }        
         }
 
         public void CommandBlind(string command, bool raw)
@@ -185,8 +195,14 @@ namespace ASCOM.TalonSuccessor
             // then all communication calls this function
             // you need something to ensure that only one command is in progress at a time
             objSerial.Transmit(command);
-            String s;
-            s = objSerial.Receive();
+            string s = "";
+            byte c;
+            do
+            {
+                c = objSerial.ReceiveByte();
+                s += (char) c;
+            } while (c != '#');
+            // probar recievebyte().
             LogMessage("Result: ", s);
             return s;
         }
@@ -455,11 +471,6 @@ namespace ASCOM.TalonSuccessor
                     return ShutterState.shutterClosed;
                 }
             }
-        }
-
-        public string GetStatus()
-        {
-            return CommandString("&G#", true);
         }
 
         public bool Slaved

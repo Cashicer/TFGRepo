@@ -37,7 +37,7 @@
             this.ayudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lbl_msg = new System.Windows.Forms.Label();
+            this.lbl_last_action = new System.Windows.Forms.Label();
             this.lblShutter = new System.Windows.Forms.Label();
             this.connectionStatus = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -67,9 +67,7 @@
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(319, 28);
             this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
-            // 
+            this.menuStrip1.Text = "menuStrip1";            // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -78,9 +76,7 @@
             this.exitToolStripMenuItem1});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
-            this.fileToolStripMenuItem.Text = "File";
-            this.fileToolStripMenuItem.Click += new System.EventHandler(this.archivoToolStripMenuItem_Click);
-            // 
+            this.fileToolStripMenuItem.Text = "File";            // 
             // setupToolStripMenuItem
             // 
             this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
@@ -108,9 +104,7 @@
             this.aboutToolStripMenuItem});
             this.ayudaToolStripMenuItem.Name = "ayudaToolStripMenuItem";
             this.ayudaToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
-            this.ayudaToolStripMenuItem.Text = "Help";
-            this.ayudaToolStripMenuItem.Click += new System.EventHandler(this.ayudaToolStripMenuItem_Click);
-            // 
+            this.ayudaToolStripMenuItem.Text = "Help";            // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
@@ -120,7 +114,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.lbl_msg);
+            this.groupBox1.Controls.Add(this.lbl_last_action);
             this.groupBox1.Controls.Add(this.lblShutter);
             this.groupBox1.Controls.Add(this.connectionStatus);
             this.groupBox1.Controls.Add(this.label3);
@@ -133,16 +127,15 @@
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Status";
-            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
-            // lbl_msg
+            // lbl_last_action
             // 
-            this.lbl_msg.AutoSize = true;
-            this.lbl_msg.Location = new System.Drawing.Point(66, 56);
-            this.lbl_msg.Name = "lbl_msg";
-            this.lbl_msg.Size = new System.Drawing.Size(31, 17);
-            this.lbl_msg.TabIndex = 5;
-            this.lbl_msg.Text = "- - -";
+            this.lbl_last_action.AutoSize = true;
+            this.lbl_last_action.Location = new System.Drawing.Point(66, 56);
+            this.lbl_last_action.Name = "lbl_last_action";
+            this.lbl_last_action.Size = new System.Drawing.Size(31, 17);
+            this.lbl_last_action.TabIndex = 5;
+            this.lbl_last_action.Text = "- - -";
             // 
             // lblShutter
             // 
@@ -166,7 +159,6 @@
             this.connectionStatus.TabIndex = 3;
             this.connectionStatus.Text = "Disconnected";
             this.connectionStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.connectionStatus.Click += new System.EventHandler(this.label4_Click);
             // 
             // label3
             // 
@@ -233,7 +225,6 @@
             this.button3.TabIndex = 2;
             this.button3.Text = "Calibration";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // btnCon
             // 
@@ -273,11 +264,9 @@
             this.button4.TabIndex = 3;
             this.button4.Text = "Go to";
             this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // timer
             // 
-            this.timer.Enabled = true;
             this.timer.Interval = 250;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
@@ -331,6 +320,6 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Label lbl_msg;
+        private System.Windows.Forms.Label lbl_last_action;
     }
 }

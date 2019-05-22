@@ -14,11 +14,17 @@ namespace ASCOM.TalonSuccessor
         public SetupDialogForm()
         {
             InitializeComponent();
+            lbl_version_driver.Text = "1.0";
         }
 
         private void SetupDialogForm_Load(object sender, EventArgs e)
         {
-            txtCOMport.Text = Dome.objSerial.Port.ToString();
+            txtCOMport.Text = "10";
+        }
+
+        private void lbl_version_driver_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

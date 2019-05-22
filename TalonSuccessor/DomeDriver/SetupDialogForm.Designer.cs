@@ -128,6 +128,7 @@
             this.lbl_version_driver.Size = new System.Drawing.Size(28, 17);
             this.lbl_version_driver.TabIndex = 2;
             this.lbl_version_driver.Text = "----";
+            this.lbl_version_driver.Click += new System.EventHandler(this.lbl_version_driver_Click);
             // 
             // groupBox1
             // 
@@ -329,6 +330,7 @@
             // 
             // btn_setup_ok
             // 
+            this.btn_setup_cancel.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btn_setup_ok.Location = new System.Drawing.Point(84, 3);
             this.btn_setup_ok.Name = "btn_setup_ok";
             this.btn_setup_ok.Size = new System.Drawing.Size(75, 23);
