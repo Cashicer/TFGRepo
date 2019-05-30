@@ -12,6 +12,7 @@
 //
 // Written by:	Bob Denny	29-May-2007
 // Modified by Chris Rowland and Peter Simpson to hamdle multiple hardware devices March 2011
+// Modified by Javier Gallego to set specific functions for the driver May 2019
 //
 using System;
 using System.Collections.Generic;
@@ -79,8 +80,14 @@ namespace ASCOM.TalonSuccessor
             lock (lockObject)
             {
                 SharedSerial.Transmit(message);
-                // TODO replace this with your requirements
-                return SharedSerial.ReceiveTerminated("#");
+                string s = "";
+                byte c;
+                do
+                {
+                    c = SharedSerial.ReceiveByte();
+                    s += (char)c;
+                } while (c != '#');
+                return s;
             }
         }
 
@@ -100,13 +107,17 @@ namespace ASCOM.TalonSuccessor
                 {
                     if (value)
                     {
-                        if (s_z == 0)
+                        if (connections == 0)
+                        {
+                            SharedSerial.Port = 10;
+                            SharedSerial.Speed = Utilities.SerialSpeed.ps9600;
                             SharedSerial.Connected = true;
-                        s_z++;
+                        }
+                        connections++;
                     }
                     else
                     {
-                        s_z--;
+                        connections--;
                         if (s_z <= 0)
                         {
                             SharedSerial.Connected = false;
@@ -117,102 +128,12 @@ namespace ASCOM.TalonSuccessor
             get { return SharedSerial.Connected; }
         }
 
-        #endregion
-
-        #region Multi Driver handling
-        // this section illustrates how multiple drivers could be handled,
-        // it's for drivers where multiple connections to the hardware can be made and ensures that the
-        // hardware is only disconnected from when all the connected devices have disconnected.
-
-        // It is NOT a complete solution!  This is to give ideas of what can - or should be done.
-        //
-        // An alternative would be to move the hardware control here, handle connecting and disconnecting,
-        // and provide the device with a suitable connection to the hardware.
-        //
-        /// <summary>
-        /// dictionary carrying device connections.
-        /// The Key is the connection number that identifies the device, it could be the COM port name,
-        /// USB ID or IP Address, the Value is the DeviceHardware class
-        /// </summary>
-        private static Dictionary<string, DeviceHardware> connectedDevices = new Dictionary<string, DeviceHardware>();
-
-        /// <summary>
-        /// This is called in the driver Connect(true) property,
-        /// it add the device id to the list of devices if it's not there and increments the device count.
-        /// </summary>
-        /// <param name="deviceId"></param>
-        public static void Connect(string deviceId)
+        public static bool IsConnected()
         {
-            lock (lockObject)
-            {
-                if (!connectedDevices.ContainsKey(deviceId))
-                    connectedDevices.Add(deviceId, new DeviceHardware());
-                connectedDevices[deviceId].count++;       // increment the value
-            }
-        }
-
-        public static void Disconnect(string deviceId)
-        {
-            lock (lockObject)
-            {
-                if (connectedDevices.ContainsKey(deviceId))
-                {
-                    connectedDevices[deviceId].count--;
-                    if (connectedDevices[deviceId].count <= 0)
-                        connectedDevices.Remove(deviceId);
-                }
-            }
-        }
-
-        public static bool IsConnected(string deviceId)
-        {
-            if (connectedDevices.ContainsKey(deviceId))
-                return (connectedDevices[deviceId].count > 0);
-            else
-                return false;
+            return connections > 0 && SharedSerial != null && SharedSerial.Connected;
         }
 
         #endregion
 
     }
-
-    /// <summary>
-    /// Skeleton of a hardware class, all this does is hold a count of the connections,
-    /// in reality extra code will be needed to handle the hardware in some way
-    /// </summary>
-    public class DeviceHardware
-    {
-        internal int count { set; get; }
-
-        internal DeviceHardware()
-        {
-            count = 0;
-        }
-    }
-
-    //#region ServedClassName attribute
-    ///// <summary>
-    ///// This is only needed if the driver is targeted at  platform 5.5, it is included with Platform 6
-    ///// </summary>
-    //[global::System.AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    //public sealed class ServedClassNameAttribute : Attribute
-    //{
-    //    // See the attribute guidelines at 
-    //    //  http://go.microsoft.com/fwlink/?LinkId=85236
-
-    //    /// <summary>
-    //    /// Gets or sets the 'friendly name' of the served class, as registered with the ASCOM Chooser.
-    //    /// </summary>
-    //    /// <value>The 'friendly name' of the served class.</value>
-    //    public string DisplayName { get; private set; }
-    //    /// <summary>
-    //    /// Initializes a new instance of the <see cref="ServedClassNameAttribute"/> class.
-    //    /// </summary>
-    //    /// <param name="servedClassName">The 'friendly name' of the served class.</param>
-    //    public ServedClassNameAttribute(string servedClassName)
-    //    {
-    //        DisplayName = servedClassName;
-    //    }
-    //}
-    //#endregion
 }

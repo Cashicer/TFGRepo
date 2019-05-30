@@ -60,7 +60,7 @@ namespace ASCOM.TalonSuccessor
     public class Dome : ReferenceCountedObjectBase, IDomeV2
     {
 
-        internal static ASCOM.Utilities.Serial objSerial;
+        /* internal static ASCOM.Utilities.Serial objSerial;*/
 
         internal static string comPortProfileName = "COM Port"; // Constants used for Profile persistence
         internal static string comPortDefault = "COM1";
@@ -72,7 +72,7 @@ namespace ASCOM.TalonSuccessor
         /// <summary>
         /// Private variable to hold the connected state
         /// </summary>
-        private bool connectedState;
+        /// private bool connectedState;
 
         /// <summary>
         /// Private variable to hold an ASCOM Utilities object
@@ -105,7 +105,7 @@ namespace ASCOM.TalonSuccessor
 
             tl.LogMessage("Dome", "Starting initialisation");
 
-            connectedState = false; // Initialise connected to false
+            // connectedState = false; // Initialise connected to false
             utilities = new Util(); //Initialise util object
             astroUtilities = new AstroUtils(); // Initialise astro utilities object
             //TODO: Implement your additional construction here
@@ -157,7 +157,7 @@ namespace ASCOM.TalonSuccessor
         public string Action(string actionName, string actionParameters)
         {
             String act = actionName.ToLower();
-            if(act.Equals("getstatus"))
+            if (act.Equals("getstatus"))
             {
                 return CommandString("&G#", true);
             }
@@ -165,7 +165,7 @@ namespace ASCOM.TalonSuccessor
             {
                 LogMessage("", "Action {0}, parameters {1} not implemented", actionName, actionParameters);
                 throw new ASCOM.ActionNotImplementedException("Action " + actionName + " is not implemented by this driver");
-            }        
+            }
         }
 
         public void CommandBlind(string command, bool raw)
@@ -194,7 +194,7 @@ namespace ASCOM.TalonSuccessor
             // it's a good idea to put all the low level communication with the device here,
             // then all communication calls this function
             // you need something to ensure that only one command is in progress at a time
-            objSerial.Transmit(command);
+            /*objSerial.Transmit(command);
             string s = "";
             byte c;
             do
@@ -204,7 +204,8 @@ namespace ASCOM.TalonSuccessor
             } while (c != '#');
             // probar recievebyte().
             LogMessage("Result: ", s);
-            return s;
+            return s;*/
+            return SharedResources.SendMessage(command);
         }
 
         public void Dispose()
@@ -221,6 +222,22 @@ namespace ASCOM.TalonSuccessor
 
         public bool Connected
         {
+            get
+            {
+                return SharedResources.Connected;
+            }
+            set
+            {
+                if(value)
+                {
+                    SharedResources.Connected = true;
+                }
+                else
+                {
+                    SharedResources.Connected = false;
+                }
+            }
+            /*
             get
             {
                 LogMessage("Connected", "Get {0}", IsConnected);
@@ -247,7 +264,7 @@ namespace ASCOM.TalonSuccessor
                     LogMessage("Connected Set", "Disconnecting from port {0}", comPort);
                     objSerial.Connected = false;
                 }
-            }
+            }*/
         }
 
         public string Description
@@ -527,8 +544,7 @@ namespace ASCOM.TalonSuccessor
         {
             get
             {
-                if (objSerial != null && objSerial.Connected) return true;
-                return connectedState;
+                return SharedResources.IsConnected();
             }
         }
 

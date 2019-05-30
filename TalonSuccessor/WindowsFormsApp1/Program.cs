@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TalonApp
+namespace WindowsFormsApp1
 {
     static class Program
     {
@@ -16,19 +16,7 @@ namespace TalonApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmInit());
-        }
-
-        public static void DoAboutSetup()
-        {
-            Form g_about = new frmAbout();
-            g_about.ShowDialog();
-        }
-
-        public static void DoMonitorSetup()
-        {
-            Form g_monitor = new frmMonitor();
-            g_monitor.ShowDialog();
+            Application.Run(new Form1());
         }
     }
 }
